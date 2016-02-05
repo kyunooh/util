@@ -1,0 +1,77 @@
+import java.util.ArrayList;
+import java.util.List;
+
+public class PaginationDTO<T>{
+    private List<T> items;
+
+    private List<Integer> displayPages;
+
+    public static final int DEFAULT_DISPLAY_ITEM_SIZE = 25;
+
+    public static final int DEFAULT_DISPLAY_PAGE_SIZE = 10;
+
+    private int displayItemSize;
+
+    private int displayPageSize;
+
+    private int displayFirstPageNumber;
+
+    private int displayLastPageNumber;
+
+    private int currentPage;
+
+    private int totalItemSize;
+
+    private int pageSize;
+
+    private boolean firstPage;
+
+    private boolean lastPage;
+
+    private boolean hasPreviousPage;
+
+    private boolean hasNextPage;
+
+
+    public PaginationDTO(List<T> items, int currentPage, int totalItemSize) {
+        this(items, currentPage, totalItemSize, DEFAULT_DISPLAY_ITEM_SIZE);
+    }
+
+
+    public PaginationDTO(List<T> items, int currentPage, int totalItemSize, int displayItemSize){
+        this(items, currentPage, totalItemSize, displayItemSize, DEFAULT_DISPLAY_PAGE_SIZE);
+    }
+
+    public PaginationDTO(List<T> items, int currentPage, int totalItemSize, int displayItemSize, int displayPageSize){
+        this.items = items;
+        this.currentPage = currentPage;
+        this.totalItemSize = totalItemSize;
+        this.displayItemSize = displayItemSize;
+
+        this.pageSize = totalItemSize / displayItemSize;
+        if(this.totalItemSize % displayItemSize != 0){
+            this.pageSize++;
+        }
+
+        this.firstPage = currentPage == 1;
+        this.lastPage = currentPage == pageSize;
+
+        this.hasPreviousPage = !this.firstPage;
+        this.hasNextPage =  !this.lastPage;
+
+        this.displayPages = new ArrayList<>();
+        int tempStartPage =  currentPage - displayPageSize / 2;
+        int tempEndPage = currentPage + displayPageSize / 2;
+
+        for(int i = tempStartPage; i <= tempEndPage; i++){
+            if(i >= 1 && i <= pageSize)
+                displayPages.add(i);
+        }
+
+        this.displayFirstPageNumber = this.displayPages.get(0);
+        this.displayLastPageNumber = this.displayPages.get(this.displayPages.size() - 1);
+    }
+
+
+
+}
